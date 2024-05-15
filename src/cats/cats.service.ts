@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './interfaces/cat.interface';
 import { CreateCatDto } from './dtos/create-cat.dto';
 
@@ -17,7 +17,14 @@ export class CatsService {
   }
 
   findOne(id: number): Cat {
-    return this.cats.find((cat) => cat.id === id);
+    const cat = this.cats.find((cat) => cat.id === id);
+    if (!cat) {
+      throw new NotFoundException("We don't have a cat with that id", {
+        cause: new Error(),
+        description: 'BAD REQUEST',
+      });
+    }
+    return cat;
   }
 
   findAll(): Cat[] {

@@ -8,11 +8,12 @@ import {
   UseFilters,
   Param,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
-import { CreateCatDto } from './dtos/create-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
+import { CreateCatDto } from './dtos/create-cat.dto';
 
 @Controller('cats')
 export class CatsController {
@@ -21,7 +22,7 @@ export class CatsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post()
   @UseFilters(new HttpExceptionFilter())
-  async create(@Body() createCatDto: CreateCatDto) {
+  async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto) {
     this.catsService.create(createCatDto);
   }
 
