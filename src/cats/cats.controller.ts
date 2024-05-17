@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   ValidationPipe,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
@@ -17,9 +18,13 @@ import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
 import { CreateCatDto } from './dtos/create-cat.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
+import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
+import { ExcludeNullInterceptor } from 'src/interceptors/exclude-null-operator.interceptor';
 
 @Controller('cats')
 @UseGuards(RolesGuard)
+@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(ExcludeNullInterceptor)
 export class CatsController {
   constructor(private catsService: CatsService) {} //dependency injection
 
