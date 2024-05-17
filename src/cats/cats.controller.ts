@@ -26,7 +26,7 @@ import { ExcludeNullInterceptor } from 'src/interceptors/exclude-null-operator.i
 @UseInterceptors(LoggingInterceptor)
 @UseInterceptors(ExcludeNullInterceptor)
 export class CatsController {
-  constructor(private catsService: CatsService) {} //dependency injection
+  constructor(private readonly catsService: CatsService) {} //dependency injection
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post()
