@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { CatsController } from './cats.controller';
 import { CatsService } from './cats.service';
-import { Cat } from './interfaces/cat.interface';
+import { CatInterface } from './interfaces/cat.interface';
 
 describe('CatsController', () => {
   let catsController: CatsController;
@@ -19,7 +19,7 @@ describe('CatsController', () => {
 
   describe('findAll', () => {
     it('should return an array of cats', async () => {
-      const result: Cat[] = [
+      const result: CatInterface[] = [
         {
           id: 0,
           name: 'test',
@@ -27,7 +27,9 @@ describe('CatsController', () => {
           breed: 'french',
         },
       ];
-      jest.spyOn(catsService, 'findAll').mockImplementation(() => result);
+      jest
+        .spyOn(catsService, 'findAll')
+        .mockImplementation(() => Promise.resolve(result));
       expect(await catsController.findAll()).toBe(result);
     });
   });

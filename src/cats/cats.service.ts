@@ -1,33 +1,43 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Cat } from './interfaces/cat.interface';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CatInterface } from './interfaces/cat.interface';
 import { CreateCatDto } from './dtos/create-cat.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Cat } from './entities/cat.entity';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = [];
+  constructor(@InjectRepository(Cat) private catsRepository: Repository<Cat>) {}
 
-  create(cat: CreateCatDto) {
-    const newCat: Cat = {
-      id: this.cats.length,
+  async create(cat: CreateCatDto): Promise<CatInterface> {
+    const newCat: CatInterface = {
       name: cat.name,
       age: cat.age,
       breed: cat.breed,
     };
-    this.cats.push(newCat);
+
+    const savedCat = await this.catsRepository.save(newCat);
+
+    return savedCat;
   }
 
-  findOne(id: number): Cat {
-    const cat = this.cats.find((cat) => cat.id === id);
-    if (!cat) {
-      throw new NotFoundException("We don't have a cat with that id", {
-        cause: new Error(),
-        description: 'BAD REQUEST',
-      });
+  async findOne(id: number): Promise<CatInterface> {
+    const cat: CatInterface | null = await this.catsRepository.findOneBy({
+      id,
+    });
+    if (cat) {
+      return cat;
     }
-    return cat;
+    throw new BadRequestException('no cat found');
   }
 
-  findAll(): Cat[] {
-    return this.cats;
+  async findAll(): Promise<CatInterface[]> {
+    const cats: Cat[] = await this.catsRepository.find();
+    return cats.map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      age: cat.age,
+      breed: cat.breed,
+    }));
   }
 }
