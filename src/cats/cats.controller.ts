@@ -14,12 +14,12 @@ import {
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
-import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { CreateCatDto } from './dtos/create-cat.dto';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
-import { ExcludeNullInterceptor } from 'src/interceptors/exclude-null-operator.interceptor';
+import { RolesGuard } from '../guards/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
+import { LoggingInterceptor } from '../interceptors/logging.interceptor';
+import { ExcludeNullInterceptor } from '../interceptors/exclude-null-operator.interceptor';
 
 @Controller('cats')
 @UseGuards(RolesGuard)
